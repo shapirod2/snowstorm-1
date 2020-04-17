@@ -1,5 +1,6 @@
 package org.snomed.snowstorm.fhir.services;
 
+import java.text.ParseException;
 import java.util.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -40,6 +41,8 @@ import static org.snomed.snowstorm.config.Config.DEFAULT_LANGUAGE_CODE;
 
 @Component
 public class FHIRHelper implements FHIRConstants {
+	
+	private static final java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyyMMdd");
 
 	@Autowired
 	private CodeSystemService codeSystemService;
@@ -293,6 +296,7 @@ public class FHIRHelper implements FHIRConstants {
 	
 	public StringType enhanceCodeSystem (StringType codeSystem, StringType version, Coding coding) throws FHIROperationException {
 		if (version != null) {
+			FHIRHelper.validateEffectiveTime(version.asStringValue());
 			if (codeSystem == null) {
 				codeSystem = new StringType(SNOMED_URI_DEFAULT_MODULE + "/version/" + version.toString());
 			} else {
@@ -407,6 +411,17 @@ public class FHIRHelper implements FHIRConstants {
 		}
 		
 		return c.getCode().equals(string);
+	}
+	
+	public static void validateEffectiveTime (String input) throws org.snomed.snowstorm.fhir.services.FHIROperationException {
+		if (!StringUtils.isEmpty(input)) {
+			try {
+				Date date =	sdf.parse(input.trim());
+				sdf.format(date);
+			} catch (ParseException e) {
+				throw new FHIROperationException(IssueType.VALUE, "Version is expected to be in format YYYYMMDD only.  Instead received: " + input);
+			}
+		}
 	}
 
 }
