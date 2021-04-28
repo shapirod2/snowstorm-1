@@ -202,8 +202,9 @@ public class Concept extends SnomedComponent<Concept> implements ConceptView, Sn
 		return associationTargetStrings;
 	}
 
-	public void setAssociationTargets(Map<String, Set<String>> associationTargetStrings) {
+	public Concept setAssociationTargets(Map<String, Set<String>> associationTargetStrings) {
 		this.associationTargetStrings = associationTargetStrings;
+		return this;
 	}
 
 	public List<ReferenceSetMember> getAssociationTargetMembers() {

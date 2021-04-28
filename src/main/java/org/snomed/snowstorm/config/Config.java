@@ -62,6 +62,7 @@ import java.util.concurrent.Executors;
 import static java.lang.Long.parseLong;
 
 @SpringBootApplication(
+		scanBasePackages = "org.snomed.snowstorm",
 		exclude = {
 				ElasticsearchDataAutoConfiguration.class,
 				ElasticsearchRestClientAutoConfiguration.class,
